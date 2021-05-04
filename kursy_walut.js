@@ -58,15 +58,14 @@ export default function Main() {
         <SendFetch code = {symbol} table = {table} date = {startDate}/>
         {startDate && 
             <>
-                {/* <canvas id = 'canvas'></canvas> */}
-                <Wykres table = {table} code = {symbol} startData = {startDate} 
+                <Graff table = {table} code = {symbol} startData = {startDate} 
                 data = {new Date().toISOString().substr(0, 10)}/>
             </>
         }
         </>
     )
 }
-function Wykres(props){
+function Graff(props){
     const [state, setState] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
@@ -92,12 +91,10 @@ function Wykres(props){
     if (props.table === 'C'){
         MAX = 0; MIN = Infinity;
         maxDay = minDay = state[0].effectiveDate;
-        // let midleLenght = 0;
         for (let i = 0; i < state.length; i++) {
             let middle = (state[i].ask + state[i].bid) / 2;
             let maxItemLenght = Math.max.call(Math, state[i].ask.toString().length, state[i].bid.toString().length);
             console.log(maxItemLenght);
-            // if (maxItemLenght > midleLenght) midleLenght = maxItemLenght;
             if (middle > MAX) {
                 MAX = Number(middle.toFixed(maxItemLenght - 2));
                 maxDay = state[i].effectiveDate;
@@ -109,7 +106,6 @@ function Wykres(props){
             }
             arr[i] = (state[i].ask + state[i].bid) / 2 ;
             console.log('MAX: ' + MAX);
-
         }
     } else {
         for (let i = 0; i < state.length; i++) {
@@ -136,22 +132,19 @@ function Wykres(props){
         const deltaW = (WIDTH)/state.length; const gradH = HEIGHT/(MAX-MIN);
 
         const yMax = 20 + (MAX-MIN) * gradH * gradient; 
-        //console.log(max, MIN, yMax);
             ctx.lineWidth = 1; ctx.strokeStyle = 'grey';
             ctx.beginPath();
             ctx.moveTo(0, HEIGHT - yMax);
-
             ctx.lineTo(WIDTH, HEIGHT - yMax);
             ctx.moveTo(0, HEIGHT - 20);
             ctx.lineTo(WIDTH, HEIGHT - 20);
             ctx.stroke();
-            ctx.lineWidth = 8;  // ?????
+            ctx.lineWidth = 8;
             ctx.strokeStyle = "red";
             ctx.moveTo(0, HEIGHT - 20 + (arr[0]-MIN) * gradH * gradient);
             ctx.beginPath();
 
             for (let i = 0; i < arr.length; i++) {
-                //console.log(arr[i]);
                 x = i * deltaW; y = 20 + (arr[i]-MIN) * gradH * gradient; 
                 //console.log('x: ' + x + ' y: ' + y);
                 ctx.lineTo(x, HEIGHT - y);
@@ -176,7 +169,6 @@ function SendFetch(props){
         fetch(`http://api.nbp.pl/api/exchangerates/tables/${props.table}/`)
           .then(response => response.json())
           .then(res => {
-              //console.log(res);
               setstate(res[0]);
               setLoaded(true); setError(false);
           })
