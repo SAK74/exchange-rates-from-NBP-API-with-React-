@@ -14,20 +14,4 @@ function Canvas(props){
     return <canvas ref = {canvasRef} width = {rest.width} height = {rest.height}></canvas>
 }
 
-function Main(){
-    function draw(ctx){
-        ctx.beginPath();
-        ctx.moveTo(20, 50);
-        ctx.lineTo(150, 120);
-        ctx.lineTo(100,80);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.strokeStyle = 'red';
-        ctx.rect(0,0,50,150);
-        ctx.strokeRect(0,0,120,80);
-        ctx.stroke();
-        console.log(ctx.canvas.width, ctx.canvas.height);
-    }
-    return <Canvas width = {500} height = {350} draw = {draw}/>;
-}
 export default Canvas;
