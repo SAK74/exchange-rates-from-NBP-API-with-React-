@@ -1,0 +1,47 @@
+table {
+  float: left;
+  border-collapse: separate;
+}
+table caption {
+  font-size: 20px;
+  font-weight: bolder;
+  margin-bottom: 8px;
+}
+table .selected {
+  background-color: palevioletred;
+}
+
+canvas {
+  margin-left: 30px;
+  margin-top: 0px;
+  float: left;
+  border-bottom: 3px solid black;
+  border-left: 3px solid black;
+}
+
+.graffCapt {
+  font-size: 1.5em;
+  font-style: italic;
+  text-align: center;
+}
+.graffCapt :first-child {
+  font-style: normal;
+  color: #8e2447;
+}
+
+.max, .min {
+  position: relative;
+  left: 15px;
+}
+
+.min {
+  top: 340px;
+}
+
+span:first-child {
+  font-weight: bold;
+}
+
+span:last-child {
+  color: orangered;
+}/*# sourceMappingURL=waluty.css.map */
