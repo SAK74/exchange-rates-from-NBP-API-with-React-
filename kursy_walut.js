@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import Canvas from './Canvas';
 import './waluty.css';
 
@@ -25,7 +25,6 @@ export default function Main() {
     }
     const handleSubmit = (ev) => {
         ev.preventDefault();
-        alert('Submit!');
     }
     return(
         <>
@@ -69,12 +68,14 @@ function Graff(props){
     const [state, setState] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
+    const [currency, setCurrency] = useState();
+
     useEffect(() => {
         fetch(`http://api.nbp.pl/api/exchangerates/rates/${props.table}/${props.code}/${props.startData}/${props.data}/`)
           .then(response => response.json())
           .then(res => {
-              console.log(res.rates);
               setState(res.rates);
+              setCurrency(res.currency);
               setLoaded(true); setError(false);
           })
           .catch(err => {
@@ -93,19 +94,17 @@ function Graff(props){
         maxDay = minDay = state[0].effectiveDate;
         for (let i = 0; i < state.length; i++) {
             let middle = (state[i].ask + state[i].bid) / 2;
-            let maxItemLenght = Math.max.call(Math, state[i].ask.toString().length, state[i].bid.toString().length);
-            console.log(maxItemLenght);
             if (middle > MAX) {
+                let maxItemLenght = Math.max.call(Math, state[i].ask.toString().length, state[i].bid.toString().length);
                 MAX = Number(middle.toFixed(maxItemLenght - 2));
                 maxDay = state[i].effectiveDate;
-                console.log('MAX: ' + MAX);
             }
             if (middle < MIN) {
+                let maxItemLenght = Math.max.call(Math, state[i].ask.toString().length, state[i].bid.toString().length);
                 MIN = Number(middle.toFixed(maxItemLenght - 2));
                 minDay = state[i].effectiveDate;
             }
-            arr[i] = (state[i].ask + state[i].bid) / 2 ;
-            console.log('MAX: ' + MAX);
+            arr[i] = middle;
         }
     } else {
         for (let i = 0; i < state.length; i++) {
@@ -146,15 +145,13 @@ function Graff(props){
 
             for (let i = 0; i < arr.length; i++) {
                 x = i * deltaW; y = 20 + (arr[i]-MIN) * gradH * gradient; 
-                //console.log('x: ' + x + ' y: ' + y);
                 ctx.lineTo(x, HEIGHT - y);
-                //ctx.fillRect(20 + x-WEIGHT/2, HEIGHT-y, WEIGHT, y);
             }
             ctx.stroke();      
     }
     return (
         <>
-            {props.table === 'C' && <div className = 'graffCapt'>Kurs Średni</div>}
+            {props.table === 'C' && <div className = 'graffCapt'><span>{currency}</span> (kurs średni)</div>}
             <Canvas width = {WIDTH} height = {HEIGHT} draw = {draw}/>
             <div className = 'max'><span>Max:</span> {MAX} (<span className = 'span'>{maxDay}</span>)</div>
             <div className = 'min'><span>Min:</span> {MIN} (<span className = 'span'>{minDay}</span>)</div>
@@ -166,22 +163,20 @@ function SendFetch(props){
     const [isLoaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
     useEffect(() => {
-        fetch(`http://api.nbp.pl/api/exchangerates/tables/${props.table}/`)
+        fetch(`http://api.nbp.pl/api/exchangerates/tales/${props.table}/`)
           .then(response => response.json())
           .then(res => {
               setstate(res[0]);
               setLoaded(true); setError(false);
           })
           .catch(err => {
-              setLoaded(true);
-              setError(err.message);
+            setError(err.message);
+            setLoaded(true);
           });
     }, [props.table]);
     if (!isLoaded) return <div>Loading...</div>
     else if (error) return <div>{error}</div>;
-    //console.log(state.rates);
     if (props.search) {
-        if (props.searchText === 'x') return null;
         let opcje = [];
         state.rates.forEach(element => {
             if (element.currency.indexOf(props.searchText) === -1 && element.code.indexOf(props.searchText) === -1) return;
