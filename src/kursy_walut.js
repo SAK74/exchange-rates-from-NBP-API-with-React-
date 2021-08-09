@@ -149,7 +149,7 @@ function Graff(props){
                 x = i * deltaW; y = 20 + (arr[i]-MIN) * gradH * gradient; 
                 ctx.lineTo(x, HEIGHT - y);
             }
-            ctx.stroke();      
+            ctx.stroke();
     }
     return (
         <>
