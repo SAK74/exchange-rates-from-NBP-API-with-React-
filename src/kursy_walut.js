@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import Canvas from './Canvas';
-import './waluty.css';
+import './waluty.scss';
 
 export default function Main() {
     const [table, setTable] = useState('C');
@@ -28,6 +28,7 @@ export default function Main() {
     const handleSubmit = (ev) => {
         ev.preventDefault();
     }
+
     return(
         <>
         <form onSubmit = {handleSubmit} name = 'main'>
@@ -85,12 +86,13 @@ function Graff(props){
               setError(err.message);
           });
     }, [props]);
+
     if (!isLoaded) return <div>Loading...</div>
     else if (error) return <div>{error}</div>;
-
-    const WIDTH =  600; const HEIGHT = 400; const gradient = .9;
-    let arr = []; let MAX, MIN, maxDay, minDay;
     
+    const WIDTH = 500; const HEIGHT = 370; const gradient = .9;
+    let arr = []; let MAX, MIN, maxDay, minDay;
+
     if (props.table === 'C'){
         MAX = 0; MIN = Infinity;
         maxDay = minDay = state[0].effectiveDate;
@@ -153,10 +155,15 @@ function Graff(props){
     }
     return (
         <>
-            {props.table === 'C' && <div className = 'graffCapt'><span>{currency}</span> (kurs średni)</div>}
-            <Canvas width = {WIDTH} height = {HEIGHT} draw = {draw}/>
-            <div className = 'max'><span>Max:</span> {MAX} (<span className = 'span'>{maxDay}</span>)</div>
-            <div className = 'min'><span>Min:</span> {MIN} (<span className = 'span'>{minDay}</span>)</div>
+            
+            <Canvas width = {WIDTH} height = {HEIGHT} draw = {draw}>
+                
+                <div className = 'canvas_header'>
+                    <span>{currency}</span>{props.table === 'C' && ' (kurs średni)'}
+                </div>
+                <div className = 'max'><span>Max:</span> {MAX} (<span>{maxDay}</span>)</div>
+                <div className = 'min'><span>Min:</span> {MIN} (<span>{minDay}</span>)</div>
+            </Canvas>
         </>
     );
 }

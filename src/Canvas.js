@@ -11,7 +11,12 @@ function Canvas(props){
         draw(context);
     });
     
-    return <canvas ref = {canvasRef} width = {size.width} height = {size.height}></canvas>
+    return (
+        <div className = "canvas_content">
+            <canvas ref = {canvasRef} width = {size.width} height = {size.height}/>
+            {props.children}
+        </div>
+    );
 }
 
 export default Canvas;
